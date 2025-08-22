@@ -1,0 +1,73 @@
+%implements s4_b0_oag7_Outputs "C"
+
+%function Outputs(block, system) Output
+%assign cfgTxt = ""
+%openfile cfgTxt
+%assign localVarDecl = ""
+%<SLibCG_TrackEO(4)>\
+%<SLibCG_TrackEO(3)>\
+%<SLibCG_TrackEO(2)>\
+%<SLibCG_TrackEO(1)>\
+%<SLibCG_TrackEO(0)>\
+%<SLibCG_TrackEI(4)>\
+%<SLibCG_TrackEI(3)>\
+%<SLibCG_TrackEI(1)>\
+%<SLibCG_TrackEI(0)>\
+/* {S!d2}Outport: '<Root>/TrgtSpd_kmph' incorporates:
+ *  Inport: '<Root>/SetSpeed_kmph'
+ */
+Path_Planner_Y.TrgtSpd_kmph = Path_Planner_U.SetSpeed_kmph;
+/* {S!d4}Outport: '<Root>/RelDist_m' incorporates:
+ *  Inport: '<Root>/LdCrLongDist_m'
+ */
+Path_Planner_Y.RelDist_m = Path_Planner_U.LdCrLongDist_m;
+/* {S!d6}Outport: '<Root>/RelSpd_kmph' incorporates:
+ *  Inport: '<Root>/LdCrLongSpd_kmph'
+ */
+Path_Planner_Y.RelSpd_kmph = Path_Planner_U.LdCrLongSpd_kmph;
+/* {S!d16}If: '<Root>/If' incorporates:
+ *  Constant: '<Root>/cacc_override_dist_m'
+ *  If: '<Root>/If1'
+ */
+if (Path_Planner_P.cacc_override_dist_m_Value == -1.0) {
+    /* {S!d8}Outport: '<Root>/IntdToStp_bool' incorporates:
+ *  DataTypeConversion: '<Root>/Data Type Conversion'
+ *  Gain: '<S5>/Gain'
+ *  Inport: '<Root>/LdCrLongSpd_kmph'
+ *  Inport: '<Root>/VehSpdAvrgDrvn_kmph'
+ *  RelationalOperator: '<S5>/Equal1'
+ */
+    Path_Planner_Y.IntdToStp_bool = (Path_Planner_P.Gain_Gain * Path_Planner_U.VehSpdAvrgDrvn_kmph == Path_Planner_U.LdCrLongSpd_kmph);
+    /* {S!d10}Outport: '<Root>/TrgtDist_m' */
+    Path_Planner_Y.TrgtDist_m = Path_Planner_P.cacc_override_dist_m_Value;
+} else {
+    /* {S!d12}Outport: '<Root>/IntdToStp_bool' incorporates:
+ *  Constant: '<S4>/Constant'
+ */
+    Path_Planner_Y.IntdToStp_bool = Path_Planner_P.Constant_Value;
+    /* {S!d14}Outport: '<Root>/TrgtDist_m' incorporates:
+ *  Constant: '<Root>/cacc_dist_offset_m'
+ *  Constant: '<Root>/cacc_time_gap_sec'
+ *  Gain: '<S6>/kmph_mps_converter'
+ *  Inport: '<Root>/LdCrLongSpd_kmph'
+ *  Inport: '<Root>/VehSpdAvrgDrvn_kmph'
+ *  Product: '<S6>/Product'
+ *  Sum: '<S6>/Add'
+ *  Sum: '<S6>/Add1'
+ */
+    Path_Planner_Y.TrgtDist_m = (Path_Planner_U.VehSpdAvrgDrvn_kmph + Path_Planner_U.LdCrLongSpd_kmph) * Path_Planner_P.kmph_mps_converter_Gain * Path_Planner_P.cacc_time_gap_sec_Value + Path_Planner_P.cacc_dist_offset_m_Value;
+}
+/* {E!d16}End of If: '<Root>/If' */
+%<SLibInsertSolverResetCode()>\
+%closefile cfgTxt
+%<cfgTxt>
+%<LibSetSystemField(system, "CachedOutputLocalVars", localVarDecl)>
+%endfunction
+%function OutputsFcnProtoType(block, system) Output
+%assign fcnProtoType = ""
+%openfile fcnProtoType
+static void Outputs(\
+%assign comma = ""
+%closefile fcnProtoType
+%<SLibCG_SetFcnProtoType(0, 1, fcnProtoType)>
+%endfunction

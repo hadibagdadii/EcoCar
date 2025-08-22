@@ -1,0 +1,23 @@
+%implements s4_b0_oag7_ModelExternalOutputInit "C"
+
+%function ModelExternalOutputInit(block, system) Output
+%assign cfgTxt = ""
+%openfile cfgTxt
+%assign localVarDecl = ""
+(void)std::memset(&Path_Planner_Y, 0, sizeof(ExtY_Path_Planner_T));
+%<SLibCG_TrackEO(4)>\
+%<SLibCG_TrackEO(3)>\
+%<SLibCG_TrackEO(2)>\
+%<SLibCG_TrackEO(1)>\
+%<SLibCG_TrackEO(0)>\
+%closefile cfgTxt
+%<cfgTxt>
+%endfunction
+%function ModelExternalOutputInitFcnProtoType(block, system) Output
+%assign fcnProtoType = ""
+%openfile fcnProtoType
+static void ModelExternalOutputInit(\
+%assign comma = ""
+%closefile fcnProtoType
+%<SLibCG_SetFcnProtoType(0, 2, fcnProtoType)>
+%endfunction

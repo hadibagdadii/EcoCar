@@ -1,0 +1,7 @@
+# Package information
+VERSION=1.24
+DESCRIPTION=This is an RTMaps package generated from the Path_Planner Simulink model using the RTMaps TLC Target for Simulink v2.6.4
+
+# LOG
+# 1.24:
+
